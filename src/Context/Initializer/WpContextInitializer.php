@@ -4,7 +4,6 @@ namespace JPB\WpBehatExtension\Context\Initializer;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
-use JPB\WpBehatExtension\Context\WpContext;
 use Symfony\Component\Finder\Finder;
 
 class WpContextInitializer implements ContextInitializer {
@@ -12,6 +11,7 @@ class WpContextInitializer implements ContextInitializer {
 	private $wordpressParams;
 	private $minkParams;
 	private $basePath;
+	private static $initialized = false;
 
 	/**
 	 * inject the wordpress extension parameters and the mink parameters
@@ -32,9 +32,10 @@ class WpContextInitializer implements ContextInitializer {
 	 * @param Context $context
 	 */
 	public function initializeContext( Context $context ) {
-		if ( ! $context instanceof WpContext ) {
+		if ( static::$initialized ) {
 			return;
 		}
+		static::$initialized = true;
 		$this->prepareEnvironment();
 		$this->loadStack();
 	}
