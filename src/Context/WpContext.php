@@ -11,13 +11,8 @@ class WpContext extends RawMinkContext {
 	 * @Given I am not logged in
 	 */
 	public function iAmNotLoggedIn() {
-		$session = $this->getSession();
-		try {
-			$session->setCookie( AUTH_COOKIE );
-			$session->setCookie( SECURE_AUTH_COOKIE );
-		} catch ( \Behat\Mink\Exception\DriverException $e ) {
-			// This is almost definitely because a request hasn't been initiated yet. Carry on.
-		}
+		$this->getSession()->reset();
+		$this->getSession()->visit( wp_logout_url() );
 	}
 
 	/**
