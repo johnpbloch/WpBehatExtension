@@ -27,9 +27,7 @@ class WpContext extends RawMinkContext {
 		$currentPage->fillField( 'user_pass', $password );
 		$currentPage->findButton( 'wp-submit' )->click();
 
-		if ( ! $this->getSession()->getCookie( LOGGED_IN_COOKIE ) ) {
-			throw new \Exception;
-		}
+		\PHPUnit_Framework_Assert::assertNotEquals( $this->getSession()->getCurrentUrl(), wp_login_url() );
 	}
 
 	/**
