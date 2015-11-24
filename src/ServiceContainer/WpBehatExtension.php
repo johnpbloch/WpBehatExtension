@@ -62,7 +62,7 @@ class WpBehatExtension
 	 */
 	private function loadContextInitializer(ContainerBuilder $container)
 	{
-		$definition = new Definition('JPB\WpBehat\Context\Initializer\WpContextInitializer', array(
+		$definition = new Definition('JPB\WpBehatExtension\Context\Initializer\WpContextInitializer', array(
 			'%wp.parameters%',
 			'%mink.parameters%',
 			'%paths.base%',
