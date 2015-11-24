@@ -20,14 +20,15 @@ class WpContext extends RawMinkContext {
 	 */
 	public function iAmLoggedInAs( $username, $password ) {
 		$this->getSession()->reset();
-		$this->getSession()->visit( wp_login_url() );
+		$login_url = wp_login_url();
+		$this->getSession()->visit( $login_url );
 		$currentPage = $this->getSession()->getPage();
 
 		$currentPage->fillField( 'user_login', $username );
 		$currentPage->fillField( 'user_pass', $password );
 		$currentPage->findButton( 'wp-submit' )->click();
 
-		\PHPUnit_Framework_Assert::assertNotEquals( $this->getSession()->getCurrentUrl(), wp_login_url() );
+		\PHPUnit_Framework_Assert::assertNotEquals( $this->getSession()->getCurrentUrl(), $login_url );
 	}
 
 	/**
