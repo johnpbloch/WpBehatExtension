@@ -7,6 +7,6 @@ use JPB\WpBehatExtension\Context\Traits\UserContext;
 
 class WpContext extends RawMinkContext {
 
-	use UserContext
+	use UserContext;
 
 }
