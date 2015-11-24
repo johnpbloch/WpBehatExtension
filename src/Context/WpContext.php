@@ -1,0 +1,79 @@
+<?php
+
+namespace JPB\WpBehatExtension\Context;
+
+use Behat\Gherkin\Node\TableNode;
+use Behat\MinkExtension\Context\RawMinkContext;
+
+class WpContext extends RawMinkContext {
+
+	/**
+	 * @Given I am not logged in
+	 */
+	public function iAmNotLoggedIn() {
+		$session = $this->getSession();
+		try {
+			$session->setCookie( AUTH_COOKIE );
+			$session->setCookie( SECURE_AUTH_COOKIE );
+		} catch ( \Behat\Mink\Exception\DriverException $e ) {
+			// This is almost definitely because a request hasn't been initiated yet. Carry on.
+		}
+	}
+
+	/**
+	 * @Given I am logged in as :username
+	 */
+	public function iAmLoggedInAs( $username ) {
+		$user = get_user_by( 'login', $username );
+		if ( ! $user ) {
+			throw new \InvalidArgumentException( sprintf( 'Could not find user %s', $username ) );
+		}
+		$authCookieName = '';
+		add_filter( 'secure_auth_cookie', function ( $secure ) use ( &$authCookieName ) {
+			$authCookieName = $secure ? SECURE_AUTH_COOKIE : AUTH_COOKIE;
+
+			return $secure;
+		}, PHP_INT_MAX );
+		$session = $this->getSession();
+		add_action( 'set_auth_cookie', function ( $cookie ) use ( $session, &$authCookieName ) {
+			$session->setCookie( $authCookieName, $cookie );
+		} );
+		add_action( 'set_logged_in_cookie', function ( $cookie ) use ( $session ) {
+			$session->setCookie( LOGGED_IN_COOKIE, $cookie );
+		} );
+	}
+
+	/**
+	 * @Given /^Users exist:$/
+	 */
+	public function usersExist( TableNode $table ) {
+		$usersData = $table->getHash();
+		foreach ( $usersData as $userData ) {
+			if ( ! get_user_by( 'login', $userData['login'] ) ) {
+				if ( empty( $userData['login'] ) ) {
+					throw new \InvalidArgumentException( 'You must provide a user login' );
+				}
+				$data               = array( 'user_login' => $userData['login'] );
+				$data['user_email'] = empty( $userData['email'] ) ? $userData['login'] . '@example.com' : $userData['email'];
+				$data['user_pass']  = empty( $userData['password'] ) ? wp_generate_password() : $userData['password'];
+				if ( ! empty( $userData['display_name'] ) ) {
+					$data['display_name'] = $userData['display_name'];
+				}
+				if ( ! empty( $userData['first_name'] ) ) {
+					$data['first_name'] = $userData['first_name'];
+				}
+				if ( ! empty( $userData['last_name'] ) ) {
+					$data['last_name'] = $userData['last_name'];
+				}
+				if ( ! empty( $userData['role'] ) ) {
+					$data['role'] = $userData['role'];
+				}
+				$result = wp_insert_user( $data );
+				if ( is_wp_error( $result ) ) {
+					throw new \UnexpectedValueException( 'User could not be created: ' . $result->get_error_message() );
+				}
+			}
+		}
+	}
+
+}

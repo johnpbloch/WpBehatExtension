@@ -1,0 +1,21 @@
+{
+    "name": "johnpbloch/wp-behat-extension",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John P Bloch",
+            "email": "john.bloch@10up.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+      "behat/behat": "^3.0",
+      "behat/mink-extension": "^2.1",
+      "symfony/finder": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {"JPB\\WpBehatExtension\\": "src/"}
+    }
+}
