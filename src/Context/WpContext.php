@@ -16,26 +16,20 @@ class WpContext extends RawMinkContext {
 	}
 
 	/**
-	 * @Given I am logged in as :username
+	 * @Given I am logged in as :username with :password
 	 */
-	public function iAmLoggedInAs( $username ) {
-		$user = get_user_by( 'login', $username );
-		if ( ! $user ) {
-			throw new \InvalidArgumentException( sprintf( 'Could not find user %s', $username ) );
-		}
-		$authCookieName = '';
-		add_filter( 'secure_auth_cookie', function ( $secure ) use ( &$authCookieName ) {
-			$authCookieName = $secure ? SECURE_AUTH_COOKIE : AUTH_COOKIE;
+	public function iAmLoggedInAs( $username, $password ) {
+		$this->getSession()->reset();
+		$this->getSession()->visit( wp_login_url() );
+		$currentPage = $this->getSession()->getPage();
 
-			return $secure;
-		}, PHP_INT_MAX );
-		$session = $this->getSession();
-		add_action( 'set_auth_cookie', function ( $cookie ) use ( $session, &$authCookieName ) {
-			$session->setCookie( $authCookieName, $cookie );
-		} );
-		add_action( 'set_logged_in_cookie', function ( $cookie ) use ( $session ) {
-			$session->setCookie( LOGGED_IN_COOKIE, $cookie );
-		} );
+		$currentPage->fillField( 'user_login', $username );
+		$currentPage->fillField( 'user_pass', $password );
+		$currentPage->findButton( 'wp-submit' )->click();
+
+		if ( ! $this->getSession()->getCookie( LOGGED_IN_COOKIE ) ) {
+			throw new \Exception;
+		}
 	}
 
 	/**
