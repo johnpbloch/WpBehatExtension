@@ -1,0 +1,37 @@
+#!/bin/bash
+
+ROOT_UID=0
+
+if [ $UID != $ROOT_UID ]; then
+    echo "You must run this script as root"
+    exit 1
+fi
+
+if [ -e "/etc/init/selenium" ]; then
+    echo "Selenium is already set up. Starting..."
+    start selenium
+fi
+
+apt-get update
+
+mkdir -p /opt/selenium
+
+pushd /opt/selenium
+
+wget http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar
+
+apt-get install -y firefox xvfb
+
+popd
+
+tee /etc/init/selenium.conf <<EOL
+description "Selenium Standalone Server 2.48.2"
+start on runlevel [2345]
+stop on runlevel [!2345]
+respawn
+pre-start script
+    exec su - vagrant -c "DISPLAY=:1 xvfb-run java -jar /opt/selenium/selenium-server-standalone-2.48.2.jar > /dev/null 2>&1 &"
+end script
+EOL
+
+start selenium
