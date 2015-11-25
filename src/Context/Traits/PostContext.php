@@ -22,14 +22,20 @@ trait PostContext {
 	 * @return array
 	 */
 	private function getpostDataFromTable( $postData ) {
-		if ( ! empty( $postData['author'] ) && ! is_numeric( $postData['author'] ) ) {
-			$user = get_user_by( 'login', $postData['author'] );
+		$author = null;
+		if ( ! empty( $postData['post_author'] ) ) {
+			$author = $postData['post_author'];
+		} elseif ( ! empty( $postData['author'] ) ) {
+			$author = $postData['post_author'] = $postData['author'];
+			unset( $postData['author'] );
+		}
+		if ( $author && ! is_numeric( $author ) ) {
+			$user = get_user_by( 'login', $author );
 			if ( $user ) {
-				$postData['author'] = $user->ID;
-			} else {
-				unset( $postData['author'] );
+				$postData['post_author'] = $user->ID;
 			}
 		}
+
 		foreach (
 			[
 				'author',
