@@ -11,6 +11,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+      "php": ">=5.4",
       "behat/behat": "^3.0",
       "behat/mink-extension": "^2.1",
       "symfony/finder": "^2.7",
