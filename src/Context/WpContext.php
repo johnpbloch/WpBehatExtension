@@ -3,10 +3,12 @@
 namespace JPB\WpBehatExtension\Context;
 
 use Behat\MinkExtension\Context\RawMinkContext;
+use JPB\WpBehatExtension\Context\Traits\PostContext;
 use JPB\WpBehatExtension\Context\Traits\UserContext;
 
 class WpContext extends RawMinkContext {
 
-	use UserContext;
+	use UserContext,
+		PostContext;
 
 }
