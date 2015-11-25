@@ -69,6 +69,7 @@ The current list of all contexts is:
   - Steps:
     - `@Given Users exist:`
       - | login* | email | password | display_name | first_name | last_name | role |
+- `JPB\WpBehatExtension\Context\PostContext`
 
 ### Credits
 
