@@ -73,6 +73,10 @@ The current list of all contexts is:
     - `@Given Users exist:`
       - | login* | email | password | display_name | first_name | last_name | role |
 - `JPB\WpBehatExtension\Context\PostContext`
+  - Steps
+    - `@Given Posts exist:`
+      - Use a table with the standard fields from `wp_insert_post()`.
+      - Add post meta by prefixing the meta key with `meta_`
 
 #### Gotchas
 
