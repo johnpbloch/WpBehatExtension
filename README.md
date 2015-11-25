@@ -53,18 +53,21 @@ default:
         - Behat\MinkExtension\Context\MinkContext
 ```
 
-The WP behat extension defines several Context objects that you can use. None of them extend `Behat\MinkExtension\Context\MinkContext`, so if you want that context, or if you want to use another package that *does* extend it, you can do so without conflicting with this package. Most contexts are defined as traits that are then imported into the contexts that need them. `JPB\WpBehatExtension\Context\WpContext` imports all contexts, so if you need all contexts, that will let you use them all at once. `JPB\WpBehatExtension\Context\AuthenticationContext` is not included in `WpContext`, so if you need to run tests that have steps dealing with authentication, you will need to include that too.
+The WP behat extension defines several Context objects that you can use. None of them extend `Behat\MinkExtension\Context\MinkContext`, so if you want that context, or if you want to use another package that *does* extend it, you can do so without conflicting with this package. Most contexts are defined as traits that are then imported into the contexts that need them. `JPB\WpBehatExtension\Context\WpContext` imports all contexts, so if you need all contexts, that will let you use them all at once. `AuthenticationContext` and `MultisiteContext` are not included in `WpContext`, so if you need to run tests that have steps dealing with authentication or multisite, you will need to include those too.
 
 The current list of all contexts is:
 
 - `JPB\WpBehatExtension\Context\WpContext`
-  - Contains all contexts except `AuthenticationContext`
+  - Contains all contexts except `AuthenticationContext` and `MultisiteContext`
 - `JPB\WpBehatExtension\Context\AuthenticationContext`
   - Steps:
     - `@Given I am not logged in`
     - `@Given I am logged in as :username with :password`
     - `@Then I should be logged out`
     - `@Then I should be logged in`
+- `JPB\WpBehatExtension\Context\MultisiteContext`
+  - Steps:
+    - `@Given User :login is a super admin`
 - `JPB\WpBehatExtension\Context\UserContext`
   - Steps:
     - `@Given Users exist:`
