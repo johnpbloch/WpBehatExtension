@@ -72,6 +72,7 @@ The current list of all contexts is:
   - Steps:
     - `@Given Users exist:`
       - | login* | email | password | display_name | first_name | last_name | role |
+      - User meta can be specified by prepending the meta key with `meta_`
 - `JPB\WpBehatExtension\Context\PostContext`
   - Steps
     - `@Given Posts exist:`
