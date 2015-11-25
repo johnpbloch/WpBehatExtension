@@ -30,4 +30,22 @@ class AuthenticationContext extends RawMinkContext {
 		\PHPUnit_Framework_Assert::assertNotEquals( $this->getSession()->getCurrentUrl(), $login_url );
 	}
 
+	/**
+	 * @Then I should be logged out
+	 */
+	public function iShouldBeLoggedOut() {
+		$this->getSession()->visit( add_query_arg( [ 'action' => 'logged-in' ], admin_url( 'admin-ajax.php' ) ) );
+		$body = $this->getSession()->getPage()->getContent();
+		\PHPUnit_Framework_Assert::assertEquals( '0', trim( $body ) );
+	}
+
+	/**
+	 * @Then I should be logged in
+	 */
+	public function iShouldBeLoggedIn() {
+		$this->getSession()->visit( add_query_arg( [ 'action' => 'logged-in' ], admin_url( 'admin-ajax.php' ) ) );
+		$body = $this->getSession()->getPage()->getContent();
+		\PHPUnit_Framework_Assert::assertEquals( '1', trim( $body ) );
+	}
+
 }
