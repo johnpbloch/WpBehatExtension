@@ -18,7 +18,7 @@ trait UserContext {
 				throw new \InvalidArgumentException( 'You must provide a user login!' );
 			}
 			$user = get_user_by( 'login', $userData['login'] );
-			$data = $this->getDataFromTable( $userData );
+			$data = $this->getUserDataFromTable( $userData );
 			if ( $user ) {
 				$data['ID'] = $user->ID;
 			}
@@ -26,7 +26,7 @@ trait UserContext {
 			if ( is_wp_error( $result ) ) {
 				throw new \UnexpectedValueException( 'User could not be created: ' . $result->get_error_message() );
 			}
-			foreach ( $this->getMetaDataFromTable( $userData ) as $key => $value ) {
+			foreach ( $this->getUserMetaDataFromTable( $userData ) as $key => $value ) {
 				update_user_meta( $user->ID, $key, $value );
 			}
 		}
@@ -39,7 +39,7 @@ trait UserContext {
 	 *
 	 * @return array
 	 */
-	private function getDataFromTable( $userData ) {
+	private function getUserDataFromTable( $userData ) {
 		$data               = array( 'user_login' => $userData['login'] );
 		$data['user_email'] = empty( $userData['email'] ) ? $userData['login'] . '@example.com' : $userData['email'];
 		$data['user_pass']  = empty( $userData['password'] ) ? wp_generate_password() : $userData['password'];
@@ -59,7 +59,7 @@ trait UserContext {
 		return $data;
 	}
 
-	private function getMetaDataFromTable( $userData ) {
+	private function getUserMetaDataFromTable( $userData ) {
 		$meta = array();
 		foreach ( $userData as $key => $value ) {
 			if ( 'meta_' === substr( $key, 0, 5 ) ) {
