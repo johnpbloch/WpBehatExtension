@@ -75,6 +75,12 @@ The current list of all contexts is:
 
 This is probably pretty obvious, but when a mink driver makes web requests to your site, it will be happening in a different process from the step definitions. This means that in-memory-only operations made in a step definition (e.g. actions, filters, etc.) will not carry over into those web requests visiting pages on your test site.
 
+The tests don't *need* to run in the same environment as the webserver running the test site, but they do need to be able to do things like access the database, have all the same extensions available, etc. For this reason, I simply find it much more convenient to run them in the same environment as the webserver. If you use [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV), you can use `bin/vvv-setup` to get selenium2 set up inside Vagrant as an upstart script. This will install `firefox` and `xvfb` and download the standalone selenium 2 server and run it as a background daemon managed by upstart (e.g. managed using `sudo start selenium`, etc.). The script will probably work on any debian-based machine, but I have only tested on VVV.
+
+Emails can be a tricky thing. Because the step definitions don't share memory with the requests, if you haven't set the test environment up to intercept emails, there isn't any real way to turn them off from the tests. I prefer to always make sure I'm running [mailhog](https://github.com/mailhog/MailHog) on VVV and install the [WP Mailcatcher](https://wordpress.org/plugins/mailcatcher/) plugin (mailhog is built to work the same way as mailcatcher, so the plugin for mailcatcher works exactly the same). Just be aware of the fact that you *will* be sending out emails if you haven't actively taken steps to ensure you don't. The same goes for any other actions you could take (e.g. newsletter signups, posts to social media, etc.).
+
+Make sure you have dummy data that you can afford to lose. Make sure you're not using production API keys and accounts for third party services.
+
 ### Credits
 
 This work is based loosely on [John Blackbourn's WordPress Behat Extension](https://github.com/johnbillion/WordPressBehatExtension). If you need an extension that assumes you *don't* already have a site running, that one will probably be a better fit. You could theoretically still use this package alongside his package, as long as you don't load both extensions at once.
