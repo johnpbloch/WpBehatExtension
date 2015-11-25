@@ -12,6 +12,7 @@ class AuthenticationContext extends RawMinkContext {
 	public function iAmNotLoggedIn() {
 		$this->getSession()->reset();
 		$this->getSession()->visit( wp_logout_url() );
+		$this->iShouldBeLoggedOut();
 	}
 
 	/**
@@ -27,7 +28,7 @@ class AuthenticationContext extends RawMinkContext {
 		$currentPage->fillField( 'user_pass', $password );
 		$currentPage->findButton( 'wp-submit' )->click();
 
-		\PHPUnit_Framework_Assert::assertNotEquals( $this->getSession()->getCurrentUrl(), $login_url );
+		$this->iShouldBeLoggedIn();
 	}
 
 	/**
