@@ -71,6 +71,10 @@ The current list of all contexts is:
       - | login* | email | password | display_name | first_name | last_name | role |
 - `JPB\WpBehatExtension\Context\PostContext`
 
+#### Gotchas
+
+This is probably pretty obvious, but when a mink driver makes web requests to your site, it will be happening in a different process from the step definitions. This means that in-memory-only operations made in a step definition (e.g. actions, filters, etc.) will not carry over into those web requests visiting pages on your test site.
+
 ### Credits
 
 This work is based loosely on [John Blackbourn's WordPress Behat Extension](https://github.com/johnbillion/WordPressBehatExtension). If you need an extension that assumes you *don't* already have a site running, that one will probably be a better fit. You could theoretically still use this package alongside his package, as long as you don't load both extensions at once.
