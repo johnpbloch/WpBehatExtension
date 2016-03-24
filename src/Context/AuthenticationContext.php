@@ -21,6 +21,7 @@ class AuthenticationContext extends RawMinkContext {
 	public function iAmLoggedInAs( $username, $password ) {
 		$this->getSession()->reset();
 		$login_url = wp_login_url();
+		$this->getSession()->visit( wp_logout_url() );
 		$this->getSession()->visit( $login_url );
 		$currentPage = $this->getSession()->getPage();
 
@@ -46,7 +47,7 @@ class AuthenticationContext extends RawMinkContext {
 	public function iShouldBeLoggedIn() {
 		$this->getSession()->visit( add_query_arg( [ 'action' => 'logged-in' ], admin_url( 'admin-ajax.php' ) ) );
 		$body = $this->getSession()->getPage()->getContent();
-		\PHPUnit_Framework_Assert::assertEquals( '1', trim( $body ) );
+		\PHPUnit_Framework_Assert::assertEquals( '1', trim( strip_tags( $body ) ) );
 	}
 
 }
